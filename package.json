@@ -11,5 +11,20 @@
   "type": "module",
   "devDependencies": {
     "@types/node": "^25.5.0"
-  }
+  },
+  "name": "jokes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yuzuuu26/jokes.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yuzuuu26/jokes/issues"
+  },
+  "homepage": "https://github.com/Yuzuuu26/jokes#readme"
 }
