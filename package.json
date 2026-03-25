@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "csv-parser": "^3.2.0",
+    "nodemon": "^3.1.14",
+    "readline-sync": "^1.4.10",
+    "typescript": "^6.0.2"
+  },
+  "scripts": {
+    "ndm": "nodemon dist/index.js"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^25.5.0"
+  }
+}
