@@ -7,7 +7,7 @@ const rl = readLine.createInterface({
     output : process.stdout
 })
 
-const filePath: string = './csv/ts-jokes.csv'
+const filePath: string = './data/ts-jokes.csv'
 
 type RowData = {
     id: string;

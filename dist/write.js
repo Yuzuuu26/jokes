@@ -5,7 +5,7 @@ const rl = readLine.createInterface({
     input: process.stdin,
     output: process.stdout
 });
-const filePath = './csv/ts-jokes.csv';
+const filePath = './data/ts-jokes.csv';
 let arrayHolder = [];
 let jokeHolder = '';
 let punchlineHolder = '';
@@ -77,4 +77,4 @@ fs.createReadStream(filePath).pipe(csvParser()).on('data', (row) => {
     }
     createJoke();
 });
-//# sourceMappingURL=write-csv.js.map
+//# sourceMappingURL=write.js.map
