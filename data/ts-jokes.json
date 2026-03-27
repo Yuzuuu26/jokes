@@ -1,12 +1,62 @@
 [
-    {"id": "1", "question": "Bakit masama ang salt sa tao?", "answer": "Cause its a sin"},
-    {"id": "2", "question": "Anong pinaka malaking nunal sa buong asia?", "answer": "Mole of Asia 🥰"},
-    {"id": "3", "question": "Anong anime ang favorite ng mga Muslim?", "answer": "Eh di Islam Dunk"},
-    {"id": "4", "question": "What kind of cat should you never trust?", "answer": "A cheetah"},
-    {"id": "5", "question": "When does a joke become a dad joke?", "answer": "When its fully groan"},
-    {"id": "6", "question": "ano tawag sa bagong cr?", "answer": "edi banew!"},
-    {"id": "7", "question": "What did the sea said to the other sea?", "answer": "Nothing, they just waved!"},
-    {"id": "8", "question": "Anong tae ang hindi ka sigurado?", "answer": "Edu yung unpredictubol!"},
-    {"id": "9", "question": "Bakit may black eye yung juice?", "answer": "Kasi nasa pack siya!"},
-    {"id": "10", "question": "Ano ang kabaliktaran ng kaluluwa?", "answer": "Kalulunok"}
+	{
+		"id": "1",
+		"question": "Bakit masama ang salt sa tao?",
+		"answer": "Cause its a sin"
+	},
+	{
+		"id": "2",
+		"question": "Anong pinaka malaking nunal sa buong asia?",
+		"answer": "Mole of Asia 🥰"
+	},
+	{
+		"id": "3",
+		"question": "Anong anime ang favorite ng mga Muslim?",
+		"answer": "Eh di Islam Dunk"
+	},
+	{
+		"id": "4",
+		"question": "What kind of cat should you never trust?",
+		"answer": "A cheetah"
+	},
+	{
+		"id": "5",
+		"question": "When does a joke become a dad joke?",
+		"answer": "When its fully groan"
+	},
+	{
+		"id": "6",
+		"question": "ano tawag sa bagong cr?",
+		"answer": "edi banew!"
+	},
+	{
+		"id": "7",
+		"question": "What did the sea said to the other sea?",
+		"answer": "Nothing, they just waved!"
+	},
+	{
+		"id": "8",
+		"question": "Anong tae ang hindi ka sigurado?",
+		"answer": "Edu yung unpredictubol!"
+	},
+	{
+		"id": "9",
+		"question": "Bakit may black eye yung juice?",
+		"answer": "Kasi nasa pack siya!"
+	},
+	{
+		"id": "10",
+		"question": "Ano ang kabaliktaran ng kaluluwa?",
+		"answer": "Kalulunok"
+	},
+	{
+		"id": "11",
+		"question": "Anong fish ang makapal?",
+		"answer": "Edi maniFISH!"
+	},
+	{
+		"id": "12",
+		"question": "Anong favorite spot ni dracula?",
+		"answer": "edi Bat-minton"
+	}
 ]
