@@ -94,10 +94,10 @@ function add() {
             console.log(`${arrayLengthString}. ${jokeHolder} ${punchlineHolder}\n`);
             switch (fileSource) {
                 case ('csv'):
-                    addCSV(arrayLengthString, jokeHolder, punchlineHolder);
+                    addCSV(arrayLengthString, jokeHolder, punchlineHolder, filePath);
                     break;
                 case ('json'):
-                    addJSON(arrayLengthString, jokeHolder, punchlineHolder);
+                    addJSON(arrayLengthString, jokeHolder, punchlineHolder, filePath);
                     break;
             }
             return addAnother();
@@ -112,7 +112,7 @@ function add() {
         }
     });
 }
-export function addCSV(arrayLengthString, jokeHolder, punchlineHolder) {
+export function addCSV(arrayLengthString, jokeHolder, punchlineHolder, filePath) {
     arrayHolder.push(arrayLengthString);
     arrayHolder.push('\"' + jokeHolder + '\"');
     arrayHolder.push('\"' + punchlineHolder + '\"');
@@ -122,7 +122,7 @@ export function addCSV(arrayLengthString, jokeHolder, punchlineHolder) {
     console.log(arrayString);
     return arrayString;
 }
-export function addJSON(arrayLengthString, jokeHolder, punchlineHolder) {
+export function addJSON(arrayLengthString, jokeHolder, punchlineHolder, filePath) {
     let jsonObjects = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     jsonObjects.push({
         id: arrayLengthString,

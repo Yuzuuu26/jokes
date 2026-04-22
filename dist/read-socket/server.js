@@ -1,12 +1,15 @@
 import csvParser from 'csv-parser';
 import fs from 'fs';
-import * as readLine from 'readline';
+import * as readline from 'readline';
 import dotenv from 'dotenv';
+import * as net from 'net';
 dotenv.config();
 const fileSource = process.env.FILE_SOURCE;
+const environment = process.env.ENVIRONMENT;
+const PORT = process.env.PORT;
 let filePath = '';
 let questionsArray = [];
-const rl = readLine.createInterface({
+const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
@@ -39,33 +42,50 @@ export function jsonReading(filePath) {
     questionsArray = jsonObjects.map(person => Object.values(person));
     return questionsArray;
 }
-// asks the question to the client
-function askQuestion(questionsArray) {
-    rl.question(`\nChoose a number for a joke (1-${questionsArray.length}).\nEnter 0 to exit:\n`, (userInput) => {
-        // assigning userInput to be considered as a number (choice)
-        const choice = answerChecker(questionsArray, userInput);
-        const input = Number(userInput);
-        // checkers if choice is valid
-        if (choice.type === 'error') {
-            console.log(choice.message);
-            return askQuestion(questionsArray);
+// starts the server
+function server() {
+    const server = net.createServer((conn) => {
+        console.log('Server: New client.');
+        // asks the question to the client
+        function askQuestion(questionsArray) {
+            conn.write(`\nChoose a number for a joke (1-${questionsArray.length}).\nEnter 0 to exit:\n`);
         }
-        else if (choice.type === 'exit') {
-            console.log(choice.message);
-            rl.close();
-            return;
-        }
-        const question = getQuestion(questionsArray, input);
-        const answer = getAnswer(questionsArray, input);
-        // shows the joke to the user
-        console.log('\n' + question);
-        console.log(answer);
-        // loops
+        // on data (reads the user inputs), does the following
+        conn.on('data', (data) => {
+            let userInput = data.toString().trim();
+            const choice = answerChecker(questionsArray, userInput);
+            const input = Number(userInput);
+            //checker
+            if (choice.type === 'error') {
+                conn.write(choice.message);
+                return askQuestion(questionsArray);
+            }
+            // checker
+            if (choice.type === 'exit') {
+                console.log('Server: Client ended connection.');
+                conn.write(choice.message, () => {
+                    conn.destroy();
+                });
+                return;
+            }
+            const question = getQuestion(questionsArray, input);
+            const answer = getAnswer(questionsArray, input);
+            // shows the joke to the user
+            conn.write('\n' + question + " ");
+            conn.write(answer);
+            // loops
+            askQuestion(questionsArray);
+        });
+        conn.on('error', (err) => {
+            console.log('error:', err.message);
+        });
+        // calls the function
         askQuestion(questionsArray);
     });
+    server.listen(PORT, () => {
+        console.log(`Server: Listening on port ${PORT}.`);
+    });
 }
-// calls the function
-askQuestion(questionsArray);
 // Question based on the questionNumber
 export function getQuestion(questionsArray, questionNumber) {
     const question = questionsArray[questionNumber - 1][1];
@@ -93,7 +113,7 @@ export function answerChecker(questionsArray, userInput) {
         };
         return checker;
     }
-    if (choice > questionsArray.length) {
+    if (choice > questionsArray.length || choice < 0) {
         const checker = {
             type: "error",
             message: "Not within the choices. Choose again!"
@@ -113,4 +133,4 @@ export function answerChecker(questionsArray, userInput) {
     };
     return checker;
 }
-//# sourceMappingURL=read.js.map
+//# sourceMappingURL=server.js.map

@@ -1,14 +1,17 @@
 import csvParser from 'csv-parser';
 import fs from 'fs';
-import * as readLine from 'readline';
+import * as readline from 'readline';
 import dotenv from 'dotenv';
+import * as net from 'net';
 dotenv.config();
 
-const fileSource = process.env.FILE_SOURCE;
+const fileSource: string = process.env.FILE_SOURCE!;
+const environment: string = process.env.ENVIRONMENT!;
+const PORT: string = process.env.PORT!;
 let filePath: string = '';
 let questionsArray: string[][] = [];
 
-const rl = readLine.createInterface({
+const rl = readline.createInterface({
   input : process.stdin,
   output : process.stdout
 });
@@ -52,21 +55,34 @@ export function jsonReading(filePath: string): string[][] {
   return questionsArray;
 }
 
-// asks the question to the client
-function askQuestion(questionsArray: string[][]) {
-  rl.question(`\nChoose a number for a joke (1-${questionsArray.length}).\nEnter 0 to exit:\n`, (userInput) => {
+// starts the server
+function server() {
+  const server = net.createServer((conn) => {
+    console.log('Server: New client.')
 
-    // assigning userInput to be considered as a number (choice)
-    const choice = answerChecker(questionsArray, userInput);
-    const input: number = Number(userInput);
+    // asks the question to the client
+    function askQuestion(questionsArray: string[][]) {
+      conn.write(`\nChoose a number for a joke (1-${questionsArray.length}).\nEnter 0 to exit:\n`);
+    }  
 
-    // checkers if choice is valid
+    // on data (reads the user inputs), does the following
+    conn.on('data', (data) => {
+      let userInput: string = data.toString().trim();
+      const choice = answerChecker(questionsArray, userInput);
+      const input: number = Number(userInput);
+
+      //checker
     if (choice.type === 'error') {
-      console.log(choice.message);
+      conn.write(choice.message);
       return askQuestion(questionsArray);
-    } else if (choice.type === 'exit') {
-      console.log(choice.message);
-      rl.close();
+    }
+
+    // checker
+    if (choice.type === 'exit') {
+      console.log('Server: Client ended connection.');
+      conn.write(choice.message, () => {
+      conn.destroy();
+      });
       return;
     }
 
@@ -74,26 +90,35 @@ function askQuestion(questionsArray: string[][]) {
     const answer: string = getAnswer(questionsArray, input);
 
     // shows the joke to the user
-    console.log('\n' + question);
-    console.log(answer);
-
+    conn.write('\n' + question + " ");
+    conn.write(answer);
+  
     // loops
     askQuestion(questionsArray);
   });
-}   
 
-// calls the function
-askQuestion(questionsArray);
+    conn.on('error', (err) => {
+      console.log('error:', err.message);
+    });
+
+    // calls the function
+    askQuestion(questionsArray);
+  });
+
+  server.listen(PORT, () => {
+    console.log(`Server: Listening on port ${PORT}.`);
+  });
+}
 
 // Question based on the questionNumber
 export function getQuestion(questionsArray: string[][], questionNumber: number): string {
-  const question = questionsArray[questionNumber - 1]![1]!;
+  const question: string = questionsArray[questionNumber - 1]![1]!;
   return question;
 }
 
 // Answer based on the answerQuestion
 export function getAnswer(questionsArray: string[][], answerQuestion: number): string {
-  const answer = questionsArray[answerQuestion - 1]![2]!;
+  const answer: string = questionsArray[answerQuestion - 1]![2]!;
   return answer;
 }
 
@@ -104,7 +129,7 @@ export type checker = {
 
 // answer is checked if its type is correct
 export function answerChecker(questionsArray: string[][], userInput: string): checker {
-  const choice = Number(userInput);
+  const choice: number = Number(userInput);
 
   if (isNaN(choice)) {
     const checker = {
@@ -122,7 +147,7 @@ export function answerChecker(questionsArray: string[][], userInput: string): ch
     return checker;
   }
 
-  if (choice > questionsArray.length) {
+  if (choice > questionsArray.length || choice < 0) {
     const checker = {
       type: "error",
       message: "Not within the choices. Choose again!"

@@ -16,6 +16,6 @@ export declare function handleInput(input: string): {
     exit: boolean;
     input: string;
 };
-export declare function addCSV(arrayLengthString: string, jokeHolder: string, punchlineHolder: string): string;
-export declare function addJSON(arrayLengthString: string, jokeHolder: string, punchlineHolder: string): RowData;
+export declare function addCSV(arrayLengthString: string, jokeHolder: string, punchlineHolder: string, filePath: string): string;
+export declare function addJSON(arrayLengthString: string, jokeHolder: string, punchlineHolder: string, filePath: string): RowData;
 //# sourceMappingURL=write.d.ts.map

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {csvReading, jsonReading, getAnswer, getQuestion, answerChecker, type checker } from '../read.js'
+import {csvReading, jsonReading, getAnswer, getQuestion, answerChecker, type checker } from '../server.js'
 import dotenv from 'dotenv';
 dotenv.config();
 

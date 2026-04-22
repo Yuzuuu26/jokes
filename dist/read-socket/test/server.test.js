@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { describe, it, expect } from 'vitest';
-import { csvReading, jsonReading, getAnswer, getQuestion, answerChecker } from '../read.js';
+import { csvReading, jsonReading, getAnswer, getQuestion, answerChecker } from '../server.js';
 import dotenv from 'dotenv';
 dotenv.config();
 const questionsArray = [
@@ -18,7 +18,7 @@ const questionsArray = [
 ];
 const JsonfilePath = process.env.JSON_FILEPATH;
 const CSVfilePath = process.env.CSV_FILEPATH;
-describe('read.getAnswer', () => {
+describe('read.getQuestion', () => {
     it('Returns the question corresponding to the said number', () => {
         const question = getQuestion(questionsArray, 1);
         expect(question).toBe("Bakit masama ang salt sa tao?");
@@ -91,4 +91,4 @@ describe('read.csvReading', () => {
         expect(questions[3][2]).toBe('A cheetah');
     }));
 });
-//# sourceMappingURL=read.test.js.map
+//# sourceMappingURL=server.test.js.map
