@@ -14,9 +14,9 @@ const rl = readLine.createInterface({
 });
 
 type RowData = {
-    id: string;
-    question: string;
-    answer: string;
+  id: string;
+  question: string;
+  answer: string;
 };
 
 // switch for filepath based on filesource
@@ -47,7 +47,7 @@ export function csvReading(filePath: string): Promise<string[][]> {
 // JSON file parsing
 export function jsonReading(filePath: string): string[][] {
   let jsonObjects: RowData[] = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-  questionsArray = jsonObjects.map(person =>  Object.values(person));
+  questionsArray = jsonObjects.map(question =>  Object.values(question));
 
   return questionsArray;
 }
@@ -122,7 +122,7 @@ export function answerChecker(questionsArray: string[][], userInput: string): ch
     return checker;
   }
 
-  if (choice > questionsArray.length) {
+    if (choice > questionsArray.length || choice < 0) {
     const checker = {
       type: "error",
       message: "Not within the choices. Choose again!"

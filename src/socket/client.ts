@@ -1,5 +1,4 @@
 import * as net from 'net';
-import * as readline from 'readline';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -12,7 +11,8 @@ const client = net.createConnection(PORT, IP, () => {
 }) 
 
 client.on('data', (data: any) => {
-  client.write(data);
+  let jsonID: string = JSON.parse(JSON.stringify({id: data}));
+  client.write(jsonID);
 });
 
 client.on('end', () => {
@@ -25,13 +25,4 @@ client.on('close', () => {
 
 client.on('error', (err: Error) => {
   console.log('Error:', err.message);
-});
-
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
-rl.on('line', (input) => {
-    client.write(input.trim());
 });

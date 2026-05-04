@@ -36,7 +36,7 @@ export function csvReading(filePath) {
 // JSON file parsing
 export function jsonReading(filePath) {
     let jsonObjects = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-    questionsArray = jsonObjects.map(person => Object.values(person));
+    questionsArray = jsonObjects.map(question => Object.values(question));
     return questionsArray;
 }
 // asks the question to the client
@@ -93,7 +93,7 @@ export function answerChecker(questionsArray, userInput) {
         };
         return checker;
     }
-    if (choice > questionsArray.length) {
+    if (choice > questionsArray.length || choice < 0) {
         const checker = {
             type: "error",
             message: "Not within the choices. Choose again!"

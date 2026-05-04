@@ -1,25 +1,18 @@
 import csvParser from 'csv-parser';
 import fs from 'fs';
-import * as readline from 'readline';
 import dotenv from 'dotenv';
 import * as net from 'net';
 dotenv.config();
 
 const fileSource: string = process.env.FILE_SOURCE!;
-const environment: string = process.env.ENVIRONMENT!;
 const PORT: string = process.env.PORT!;
 let filePath: string = '';
 let questionsArray: string[][] = [];
 
-const rl = readline.createInterface({
-  input : process.stdin,
-  output : process.stdout
-});
-
 type RowData = {
-    id: string;
-    question: string;
-    answer: string;
+  id: string;
+  question: string;
+  answer: string;
 };
 
 // switch for filepath based on filesource
@@ -50,10 +43,20 @@ export function csvReading(filePath: string): Promise<string[][]> {
 // JSON file parsing
 export function jsonReading(filePath: string): string[][] {
   let jsonObjects: RowData[] = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-  questionsArray = jsonObjects.map(person =>  Object.values(person));
+  questionsArray = jsonObjects.map(question =>  Object.values(question));
 
   return questionsArray;
 }
+
+type inputState = {
+  type: 'response' | 'request'
+  id: string
+  question: string
+  answer: string
+  file: string
+}
+
+let requestHolder: inputState[] = [];
 
 // starts the server
 function server() {
@@ -62,14 +65,28 @@ function server() {
 
     // asks the question to the client
     function askQuestion(questionsArray: string[][]) {
-      conn.write(`\nChoose a number for a joke (1-${questionsArray.length}).\nEnter 0 to exit:\n`);
+      conn.write(`\nChoose a number for a question (1-${questionsArray.length}).\nEnter 0 to exit:\n`);
     }  
 
     // on data (reads the user inputs), does the following
     conn.on('data', (data) => {
-      let userInput: string = data.toString().trim();
-      const choice = answerChecker(questionsArray, userInput);
-      const input: number = Number(userInput);
+      // clears requestHolder array for a new data input
+      requestHolder = [];
+
+      // request comes in this format following inputState form
+      requestHolder.push({
+        type: 'request',
+        id: data.toString().trim(),
+        question: '',
+        answer: '',
+        file: fileSource
+      });
+
+      // Request is sent and shown to server in JSON format
+      console.log('REQUEST:', JSON.stringify(requestHolder[0])); 
+
+      const choice = answerChecker(questionsArray, requestHolder[0]?.id!);
+      const input: number = Number(requestHolder[0]?.id);
 
       //checker
     if (choice.type === 'error') {
@@ -89,10 +106,23 @@ function server() {
     const question: string = getQuestion(questionsArray, input);
     const answer: string = getAnswer(questionsArray, input);
 
+    requestHolder.push({
+      type: 'response',
+      id: input.toString(),
+      question: question,
+      answer: answer,
+      file: fileSource
+    });
+
     // shows the joke to the user
-    conn.write('\n' + question + " ");
-    conn.write(answer);
+    conn.write('\n' + requestHolder[1]?.question + " ");
+    conn.write(requestHolder[1]?.answer!);
   
+    console.log('RESPONSE:', JSON.stringify(requestHolder[1]));
+
+    // clear for the second time
+    requestHolder = [];
+
     // loops
     askQuestion(questionsArray);
   });
@@ -109,6 +139,8 @@ function server() {
     console.log(`Server: Listening on port ${PORT}.`);
   });
 }
+
+server();
 
 // Question based on the questionNumber
 export function getQuestion(questionsArray: string[][], questionNumber: number): string {
@@ -130,6 +162,7 @@ export type checker = {
 // answer is checked if its type is correct
 export function answerChecker(questionsArray: string[][], userInput: string): checker {
   const choice: number = Number(userInput);
+  console.log('choice', choice)
 
   if (isNaN(choice)) {
     const checker = {

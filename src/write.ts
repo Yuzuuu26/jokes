@@ -57,7 +57,7 @@ export function CSVWrite(filePath: string): Promise<string[][]> {
 }
 export function JSONWrite(filePath: string) {
   let jsonObjects: RowData[] = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-  questionsArray = jsonObjects.map(person =>  Object.values(person));
+  questionsArray = jsonObjects.map(question =>  Object.values(question));
 
   arrayLength = questionsArray.length + 1;
   return questionsArray;
